@@ -1,0 +1,239 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+/* ============================================================
+   DESIGN TOKENS: MODERN LUXURY
+   ============================================================ */
+:root {
+  /* Core Foundation */
+  --lx-black: #0c0c0c;
+  --lx-charcoal: #161616;
+  --lx-surface: #1e1e1e;
+  --lx-surface-elevated: #262626;
+
+  /* Warm Accents */
+  --lx-beige: #e5dfd4;
+  --lx-beige-dim: rgba(229, 223, 212, 0.6);
+  --lx-beige-faint: rgba(229, 223, 212, 0.08);
+  --lx-gold-soft: #bfa780;
+  --lx-gold-dim: rgba(191, 167, 128, 0.15);
+
+  /* Typography */
+  --lx-text-primary: #f8f6f0;
+  --lx-text-secondary: rgba(248, 246, 240, 0.65);
+  --lx-text-tertiary: rgba(248, 246, 240, 0.4);
+
+  /* Borders & Dividers */
+  --lx-border: rgba(229, 223, 212, 0.15);
+  --lx-border-light: rgba(229, 223, 212, 0.08);
+
+  /* Shadows - Diffused, soft depth */
+  --lx-shadow-sm: 0 4px 12px rgba(0,0,0,0.15);
+  --lx-shadow-md: 0 8px 30px rgba(0,0,0,0.25);
+  --lx-shadow-lg: 0 16px 50px rgba(0,0,0,0.4);
+
+  /* Layout */
+  --lx-radius: 4px; /* Less rounded, more architectural */
+  --lx-radius-lg: 8px;
+  
+  /* Motion */
+  --lx-transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --lx-transition-fast: all 0.2s ease;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--lx-black);
+  color: var(--lx-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--lx-charcoal); }
+::-webkit-scrollbar-thumb {
+  background: var(--lx-surface-elevated);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--lx-beige-dim);
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--lx-text-primary);
+  line-height: 1.3;
+}
+
+h1 { font-weight: 600; letter-spacing: -0.02em; }
+
+.text-gold { color: var(--lx-gold-soft); }
+.text-beige { color: var(--lx-beige); }
+.text-secondary { color: var(--lx-text-secondary); }
+
+/* ============================================================
+   KEYFRAME ANIMATIONS
+   ============================================================ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+.fade-in { animation: fadeIn 0.8s ease forwards; }
+.slide-up { animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+.delay-1 { animation-delay: 0.1s; opacity: 0; }
+.delay-2 { animation-delay: 0.2s; opacity: 0; }
+.delay-3 { animation-delay: 0.3s; opacity: 0; }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 36px;
+  background: var(--lx-beige);
+  color: var(--lx-black);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid var(--lx-beige);
+  border-radius: var(--lx-radius);
+  cursor: pointer;
+  transition: var(--lx-transition);
+  text-decoration: none;
+}
+.btn-primary:hover {
+  background: transparent;
+  color: var(--lx-beige);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 36px;
+  background: transparent;
+  color: var(--lx-text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid var(--lx-border);
+  border-radius: var(--lx-radius);
+  cursor: pointer;
+  transition: var(--lx-transition);
+  text-decoration: none;
+}
+.btn-secondary:hover {
+  border-color: var(--lx-beige);
+  color: var(--lx-beige);
+  background: var(--lx-beige-faint);
+}
+
+/* ============================================================
+   CARDS & LAYERS
+   ============================================================ */
+.lx-card {
+  background: var(--lx-charcoal);
+  border: 1px solid var(--lx-border-light);
+  border-radius: var(--lx-radius-lg);
+  overflow: hidden;
+  transition: var(--lx-transition);
+}
+.lx-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--lx-shadow-md);
+  border-color: var(--lx-border);
+}
+
+.lx-glass-subtle {
+  background: rgba(22, 22, 22, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--lx-border-light);
+}
+
+/* ============================================================
+   DIVIDER
+   ============================================================ */
+.divider-lx {
+  height: 1px;
+  background: var(--lx-border-light);
+  border: none;
+  margin: 0;
+}
+
+/* ============================================================
+   TAGS / BADGES
+   ============================================================ */
+.badge-lx {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--lx-radius);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--lx-surface);
+  border: 1px solid var(--lx-border);
+  color: var(--lx-text-secondary);
+}
+
+.badge-lx-accent {
+  background: var(--lx-gold-dim);
+  border-color: rgba(191,167,128,0.3);
+  color: var(--lx-gold-soft);
+}
+
+/* ============================================================
+   OVERRIDE MUI DEFAULTS ON DARK BG
+   ============================================================ */
+.MuiCssBaseline-root {
+  background-color: var(--lx-black) !important;
+}

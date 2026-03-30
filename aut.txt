@@ -1,0 +1,5 @@
+Role	Email	Password
+Admin	admin@flyingwood.com	admin123
+Vendor	vendor1@flyingwood.com	vendor123
+Customer	john@example.com	customer123
+Staff	staff@flyingwood.com	staff123
