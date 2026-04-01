@@ -31,11 +31,13 @@ import {
   ViewModule,
   ViewList,
 } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
-import { productAPI } from '../services/api';
+import { Link, useNavigate } from 'react-router-dom';
+import { productAPI, cartAPI } from '../services/api';
 import { formatPrice } from '../utils/currency';
+import ProductCard from '../components/shared/ProductCard';
 
 const Products = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -74,10 +76,10 @@ const Products = () => {
           limit: 12
         });
         if (data.products && Array.isArray(data.products)) {
-          setProducts(data.products);
+          setProducts(data.products.filter(p => !p.has3D));
           setTotalPages(data.pagination?.pages || 1);
         } else if (Array.isArray(data)) {
-          setProducts(data);
+          setProducts(data.filter(p => !p.has3D));
           setTotalPages(1);
         }
       } catch (err) {
@@ -130,6 +132,15 @@ const Products = () => {
 
   const toggleWishlist = (productId) => {
     setWishlist(prev => prev.includes(productId) ? prev.filter(id => id !== productId) : [...prev, productId]);
+  };
+
+  const handleBuyNow = async (productId) => {
+    try {
+      await cartAPI.add({ productId, quantity: 1 });
+      navigate('/cart');
+    } catch (err) {
+      console.error('Error adding to cart:', err);
+    }
   };
 
   return (
@@ -224,46 +235,26 @@ const Products = () => {
           </Box>
         ) : (
           <>
-            <Grid container spacing={4}>
+            <Grid container spacing={4} sx={{ width: '100%', m: 0, justifyContent: 'center' }}>
               {products.map((product) => (
-                <Grid item xs={12} sm={viewMode === 'grid' ? 6 : 12} md={viewMode === 'grid' ? 4 : 12} lg={viewMode === 'grid' ? 3 : 12} key={product._id || product.id}>
-                  <Card className="lx-card" sx={{ height: '100%', display: 'flex', flexDirection: viewMode === 'list' ? 'row' : 'column', background: 'var(--lx-charcoal)' }}>
-                    <Box sx={{ position: 'relative', width: viewMode === 'list' ? 300 : '100%' }}>
-                      <CardMedia
-                        component="img"
-                        height={viewMode === 'list' ? '100%' : '280'}
-                        image={product.images?.[0]?.url || '/api/placeholder/400/300'}
-                        alt={product.name}
-                        sx={{ objectFit: 'cover' }}
-                      />
-                      <IconButton
-                        sx={{ position: 'absolute', top: 12, right: 12, bgcolor: 'var(--lx-surface-elevated)', '&:hover': { bgcolor: 'var(--lx-surface)' } }}
-                        onClick={(e) => { e.preventDefault(); toggleWishlist(product._id || product.id); }}
-                      >
-                        {wishlist.includes(product._id || product.id) ? <Favorite sx={{ color: 'var(--lx-gold-soft)' }} /> : <FavoriteBorder sx={{ color: 'var(--lx-text-secondary)' }} />}
-                      </IconButton>
-                    </Box>
-                    <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', p: 3 }}>
-                      <Typography variant="caption" sx={{ color: 'var(--lx-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.1em', mb: 1 }}>
-                        {product.category || 'Furniture'}
-                      </Typography>
-                      <Typography variant="h6" sx={{ color: 'var(--lx-text-primary)', mb: 1, lineHeight: 1.3 }}>
-                        {product.name}
-                      </Typography>
-                      <Typography sx={{ color: 'var(--lx-text-secondary)', fontSize: '0.9rem', mb: 3, flexGrow: 1 }}>
-                        {product.shortDescription}
-                      </Typography>
-                      
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pt: 2, borderTop: '1px solid var(--lx-border-light)' }}>
-                        <Typography sx={{ color: 'var(--lx-text-primary)', fontWeight: 500, fontSize: '1.1rem' }}>
-                          {formatPrice(product.price)}
-                        </Typography>
-                        <Button component={Link} to={`/products/${product._id || product.id}`} size="small" sx={{ color: 'var(--lx-beige)' }}>
-                          View Piece
-                        </Button>
-                      </Box>
-                    </CardContent>
-                  </Card>
+                <Grid 
+                  item 
+                  xs={12} 
+                  sm={viewMode === 'grid' ? 6 : 12} 
+                  md={viewMode === 'grid' ? 4 : 12} 
+                  lg={viewMode === 'grid' ? 3 : 12} 
+                  key={product._id || product.id}
+                  sx={{ display: 'flex', justifyContent: 'center' }}
+                >
+                  <Box sx={{ width: '100%', height: '100%' }}>
+                    <ProductCard 
+                      product={product} 
+                      viewMode={viewMode}
+                      isInWishlist={wishlist.includes(product._id || product.id)}
+                      onWishlistToggle={toggleWishlist}
+                      onBuyNow={handleBuyNow}
+                    />
+                  </Box>
                 </Grid>
               ))}
             </Grid>

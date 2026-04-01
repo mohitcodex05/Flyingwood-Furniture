@@ -23,8 +23,9 @@ const Footer = () => {
     <Box
       component="footer"
       sx={{
-        backgroundColor: 'primary.main',
-        color: 'white',
+        backgroundColor: 'var(--lx-black)',
+        borderTop: '1px solid var(--lx-border-light)',
+        color: 'var(--lx-text-primary)',
         py: 6,
         mt: 8
       }}
@@ -34,7 +35,7 @@ const Footer = () => {
           {/* Company Info */}
           <Grid item xs={12} md={4}>
             <Typography variant="h5" gutterBottom fontWeight="bold">
-              🪑 Flyingwood Furniture
+              🪑 FlyingWood Furniture
             </Typography>
             <Typography variant="body2" sx={{ mb: 2, opacity: 0.9 }}>
               Sustainable, beautifully crafted furniture for modern living spaces. 
@@ -162,7 +163,7 @@ const Footer = () => {
           gap: 2 
         }}>
           <Typography variant="body2" sx={{ opacity: 0.8 }}>
-            © 2024 Flyingwood Furniture. All rights reserved.
+            © 2024 FlyingWood Furniture. All rights reserved.
           </Typography>
           <Box sx={{ display: 'flex', gap: 3 }}>
             <Link href="/privacy" color="inherit" sx={{ textDecoration: 'none', opacity: 0.8, fontSize: '0.875rem', '&:hover': { opacity: 1 } }}>

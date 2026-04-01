@@ -89,7 +89,7 @@ const Contact = () => {
                   <Typography sx={{ color: 'var(--lx-text-secondary)', mb: 6, lineHeight: 1.8 }}>114 39 Stockholm, Sweden</Typography>
 
                   <Typography sx={{ color: 'var(--lx-beige)', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.8rem', mb: 2 }}>Direct Lines</Typography>
-                  <Typography sx={{ color: 'var(--lx-text-primary)', mb: 1, fontFamily: '"Inter", sans-serif' }}>concierge@flywood.luxury</Typography>
+                  <Typography sx={{ color: 'var(--lx-text-primary)', mb: 1, fontFamily: '"Inter", sans-serif' }}>concierge@flyingwood.luxury</Typography>
                   <Typography sx={{ color: 'var(--lx-text-primary)', fontFamily: '"Inter", sans-serif' }}>+46 8 123 456 78</Typography>
                </Box>
             </Grid>

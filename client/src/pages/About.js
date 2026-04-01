@@ -11,12 +11,12 @@ const About = () => {
                A Legacy of Craftsmanship
             </Typography>
             <Typography sx={{ color: 'var(--lx-text-secondary)', maxWidth: 600, mx: 'auto', fontSize: '1.1rem', lineHeight: 1.8 }}>
-               Founded on the principle that luxury is defined by longevity, Flywood Furniture creates architectural pieces designed to endure generations.
+               Founded on the principle that luxury is defined by longevity, FlyingWood Furniture creates architectural pieces designed to endure generations.
             </Typography>
          </Box>
          <Grid container spacing={8} alignItems="center">
             <Grid item xs={12} md={6}>
-               <img src="https://images.unsplash.com/photo-1542282811-943ef1a6470b?w=800&q=80" alt="Craftsmanship" style={{ width: '100%', borderRadius: 'var(--lx-radius)', filter: 'grayscale(30%)' }} />
+               <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&q=80" alt="Craftsmanship" style={{ width: '100%', borderRadius: 'var(--lx-radius)', filter: 'grayscale(30%)' }} />
             </Grid>
             <Grid item xs={12} md={6}>
                <Typography variant="h4" sx={{ color: 'var(--lx-text-primary)', mb: 3, fontFamily: '"Outfit", sans-serif' }}>The Artisan's Touch</Typography>

@@ -7,19 +7,19 @@ const Journal = () => {
     {
       title: 'The Art of Organic Woodworking',
       excerpt: 'Exploring the intersection of deep historical techniques and modern architectural spaces.',
-      image: 'https://images.unsplash.com/photo-1541123437800-1bb1317bc951?q=80&w=2000&auto=format&fit=crop',
+      image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop',
       category: 'Design Philosophy'
     },
     {
       title: 'Our Sustainable Forestry Initiative',
-      excerpt: 'How Flywood guarantees material traceability from seed to showroom.',
-      image: 'https://images.unsplash.com/photo-1425913397330-cf8af2ff40a1?q=80&w=2000&auto=format&fit=crop',
+      excerpt: 'How FlyingWood guarantees material traceability from seed to showroom.',
+      image: 'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=800&h=600&fit=crop',
       category: 'Environment'
     },
     {
       title: 'Curating the Minimalist Home',
       excerpt: 'Why negative space is the most valuable material in interior design.',
-      image: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?q=80&w=2000&auto=format&fit=crop',
+      image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop',
       category: 'Interior Architecture'
     }
   ];

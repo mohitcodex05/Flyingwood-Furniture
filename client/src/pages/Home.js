@@ -1,155 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
-import { productAPI } from '../services/api';
+import { productAPI, cartAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { formatPrice } from '../utils/currency';
+import ProductCard from '../components/shared/ProductCard';
 
-/* ─── Product Card - Modern Luxury ─── */
-const ProductCard = ({ product, index }) => {
-  const navigate = useNavigate();
-  const [hovered, setHovered] = useState(false);
-
-  return (
-    <div
-      className={`slide-up delay-${index + 1}`}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onClick={() => navigate(`/products/${product._id || product.id}`)}
-      style={{
-        cursor: 'pointer',
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        background: 'var(--lx-charcoal)',
-        border: '1px solid var(--lx-border)',
-        borderRadius: 'var(--lx-radius-lg)',
-        overflow: 'hidden',
-        transition: 'var(--lx-transition)',
-        boxShadow: hovered ? 'var(--lx-shadow-md)' : 'none',
-        transform: hovered ? 'translateY(-4px)' : 'none',
-        position: 'relative'
-      }}
-    >
-      {/* Image Area */}
-      <div style={{ position: 'relative', overflow: 'hidden', height: 320, background: '#111' }}>
-        <img
-          src={
-            product.images?.[0]?.url ||
-            `https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=400&fit=crop&auto=format`
-          }
-          alt={product.name}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease',
-            transform: hovered ? 'scale(1.05)' : 'scale(1)',
-            filter: hovered ? 'brightness(1.05)' : 'brightness(0.95)',
-          }}
-        />
-        {/* Subtle gradient overlay at bottom for text contrast if needed */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: 'linear-gradient(to top, rgba(12,12,12,0.4) 0%, transparent 40%)',
-          pointerEvents: 'none'
-        }} />
-        
-        <div style={{ position: 'absolute', top: 16, right: 16, display: 'flex', gap: 8 }}>
-          {product.isFeatured && (
-            <span style={{ 
-              background: 'var(--lx-black)', 
-              color: 'var(--lx-beige)', 
-              padding: '4px 12px', 
-              fontSize: '0.65rem', 
-              textTransform: 'uppercase', 
-              letterSpacing: '0.1em',
-              fontFamily: '"Outfit", sans-serif'
-            }}>Featured</span>
-          )}
-        </div>
-      </div>
-
-      {/* Content Area */}
-      <div style={{ padding: '24px', flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-          <h3 style={{
-            fontFamily: '"Outfit", sans-serif',
-            fontWeight: 500,
-            fontSize: '1.1rem',
-            color: 'var(--lx-text-primary)',
-            margin: 0,
-            lineHeight: 1.3
-          }}>
-            {product.name}
-          </h3>
-          
-          <div style={{ textAlign: 'right', flexShrink: 0, paddingLeft: 16 }}>
-             <div style={{
-              fontFamily: '"Inter", sans-serif',
-              fontWeight: 400,
-              fontSize: '1.05rem',
-              color: 'var(--lx-text-primary)',
-            }}>
-              {formatPrice(product.price)}
-            </div>
-            {product.comparePrice && product.comparePrice > product.price && (
-              <div style={{
-                fontFamily: '"Inter", sans-serif',
-                fontSize: '0.8rem',
-                color: 'var(--lx-text-tertiary)',
-                textDecoration: 'line-through',
-              }}>
-                {formatPrice(product.comparePrice)}
-              </div>
-            )}
-          </div>
-        </div>
-
-        <p style={{
-          fontFamily: '"Inter", sans-serif',
-          fontSize: '0.85rem',
-          color: 'var(--lx-text-secondary)',
-          margin: '0 0 24px',
-          lineHeight: 1.6,
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
-          flexGrow: 1
-        }}>
-          {product.shortDescription || product.description}
-        </p>
-
-        {/* Footer / CTA indicator */}
-        <div style={{ 
-          borderTop: '1px solid var(--lx-border-light)', 
-          paddingTop: 16, 
-          display: 'flex', 
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
-           <span style={{
-            fontFamily: '"Inter", sans-serif',
-            fontSize: '0.75rem',
-            textTransform: 'uppercase',
-            letterSpacing: '0.05em',
-            color: 'var(--lx-text-tertiary)'
-           }}>
-             View Piece
-           </span>
-           <span style={{
-             transform: hovered ? 'translateX(4px)' : 'none',
-             transition: 'transform 0.3s ease',
-             color: hovered ? 'var(--lx-beige)' : 'var(--lx-text-tertiary)'
-           }}>
-             →
-           </span>
-        </div>
-      </div>
-    </div>
-  );
-};
+// Unified ProductCard is used instead of local version
 
 /* ─── Feature Block - Modern Luxury ─── */
 const FeatureBlock = ({ number, title, description, delay }) => {
@@ -195,6 +52,7 @@ const FeatureBlock = ({ number, title, description, delay }) => {
 
 /* ─── Home Page ─── */
 const Home = () => {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -257,6 +115,15 @@ const Home = () => {
     };
     fetchProducts();
   }, []); // eslint-disable-line
+
+  const handleBuyNow = async (productId) => {
+    try {
+      await cartAPI.add({ productId, quantity: 1 });
+      navigate('/cart');
+    } catch (err) {
+      console.error('Error adding to cart:', err);
+    }
+  };
 
   const features = [
     {
@@ -356,7 +223,7 @@ const Home = () => {
                  onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--lx-beige)'; e.currentTarget.style.borderColor = 'var(--lx-beige)'; }}
                  onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--lx-text-primary)'; e.currentTarget.style.borderColor = 'var(--lx-text-tertiary)'; }}
                  >
-                   Join Flywood
+                   Join FlyingWood
                  </Link>
                )}
             </div>
@@ -517,7 +384,12 @@ const Home = () => {
               gap: 32,
             }}>
               {featuredProducts.map((product, i) => (
-                <ProductCard key={product._id || product.id} product={product} index={i} />
+                <div key={product._id || product.id} className={`slide-up delay-${i + 1}`}>
+                  <ProductCard 
+                    product={product} 
+                    onBuyNow={handleBuyNow}
+                  />
+                </div>
               ))}
             </div>
           )}

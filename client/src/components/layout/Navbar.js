@@ -22,6 +22,7 @@ import { useAuth } from '../../context/AuthContext';
 import { cartAPI } from '../../services/api';
 
 const NAV_LINKS = [
+  { label: 'Home', to: '/' },
   { label: 'Collections', to: '/products' },
   { label: 'Heritage', to: '/about' },
   { label: 'Journal', to: '/journal' },
@@ -87,7 +88,7 @@ const Navbar = () => {
           maxWidth: 1440,
           margin: '0 auto',
           display: 'grid',
-          gridTemplateColumns: 'minmax(200px, 1fr) auto minmax(200px, 1fr)',
+          gridTemplateColumns: '1fr auto 1fr',
           alignItems: 'center',
           height: 80,
         }}
@@ -130,14 +131,13 @@ const Navbar = () => {
           <span
             style={{
               fontFamily: '"Outfit", sans-serif',
-              fontWeight: 400,
-              fontSize: '1.5rem',
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase',
+              fontWeight: 600,
+              fontSize: '1.6rem',
+              letterSpacing: '0.05em',
               color: 'var(--lx-text-primary)'
             }}
           >
-            Flywood
+            FlyingWood
           </span>
         </Link>
 

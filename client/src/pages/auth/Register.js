@@ -123,7 +123,7 @@ const Register = () => {
         </Stepper>
 
         <Typography variant="h4" component="h1" gutterBottom align="center">
-          {activeStep === 0 ? 'Create Account' : 'Welcome to Flyingwood!'}
+          {activeStep === 0 ? 'Create Account' : 'Welcome to FlyingWood!'}
         </Typography>
 
         {error && (
@@ -208,7 +208,7 @@ const Register = () => {
               Registration Successful!
             </Typography>
             <Typography variant="body1" sx={{ mb: 3 }}>
-              Welcome to Flyingwood Furniture, {formData.username}! 
+              Welcome to FlyingWood Furniture, {formData.username}! 
               Your account has been created successfully.
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
