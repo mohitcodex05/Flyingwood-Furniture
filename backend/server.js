@@ -956,16 +956,19 @@ process.on('SIGINT', async () => {
 
 // Start server - Use different port
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
-  console.log(`
-🚀 FLYINGWOOD FURNITURE SERVER STARTED
-📍 Port: ${PORT}
-📱 API: http://localhost:${PORT}
-🪑 Project: Flyingwood Furniture
-📊 Database: MongoDB Local (Compass @ localhost:27017)
-👤 Models: User, Product, Order
-🛡️ Features: JWT Auth, Shopping Cart, Role-based Access
-🏠 Endpoints: 25+ routes configured
-⏰ Started: ${new Date().toLocaleString()}
-  `);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`
+  🚀 FLYINGWOOD FURNITURE SERVER STARTED
+  📍 Port: ${PORT}
+  📱 API: http://localhost:${PORT}
+  🪑 Project: Flyingwood Furniture
+  📊 Database: MongoDB
+    `);
+  });
+} else {
+  // Allow Vercel serverless deployment
+  app.listen(PORT, () => console.log(\`🚀 Server running on port \${PORT}\`));
+}
+
+module.exports = app;

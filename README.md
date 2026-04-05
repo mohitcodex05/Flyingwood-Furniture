@@ -138,21 +138,9 @@ You can import sample product data using a CSV file like this:
 
 ---
 
-## 🤝 Contributing
 
-Contributions are welcome!
-Fork the repository and submit a pull request with your feature or fix.
 
 ---
 
-## 🧾 License
 
-This project is licensed under the **MIT License** – feel free to use and modify.
 
----
-
-## 💖 Developed by
-
-**Rohit Vitthal Desai**
-📧 `rdesai1855@gmail.com`
-# Flyingwood-Furniture

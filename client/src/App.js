@@ -1,8 +1,8 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Box, CircularProgress } from '@mui/material';
+import React, { Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import './index.css';
 
@@ -11,22 +11,22 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import FlynnAssistant from './components/ai/FlynnAssistant';
 
-// Pages
-import Home from './pages/Home';
-import Products from './pages/Products';
-import ProductDetail from './pages/ProductDetail';
-import Login from './pages/auth/Login';
-import Register from './pages/auth/Register';
-import Profile from './pages/auth/Profile';
-import Cart from './pages/Cart';
-import Checkout from './pages/Checkout';
-import AdminDashboard from './pages/admin/Dashboard';
-import VendorDashboard from './pages/vendor/Dashboard';
-import ProductForm from './pages/vendor/ProductForm';
-import About from './pages/About';
-import Journal from './pages/Journal';
-import Contact from './pages/Contact';
-import Experience3D from './pages/Experience3D';
+// Lazy-loaded Pages
+const Home = React.lazy(() => import('./pages/Home'));
+const Products = React.lazy(() => import('./pages/Products'));
+const ProductDetail = React.lazy(() => import('./pages/ProductDetail'));
+const Login = React.lazy(() => import('./pages/auth/Login'));
+const Register = React.lazy(() => import('./pages/auth/Register'));
+const Profile = React.lazy(() => import('./pages/auth/Profile'));
+const Cart = React.lazy(() => import('./pages/Cart'));
+const Checkout = React.lazy(() => import('./pages/Checkout'));
+const AdminDashboard = React.lazy(() => import('./pages/admin/Dashboard'));
+const VendorDashboard = React.lazy(() => import('./pages/vendor/Dashboard'));
+const ProductForm = React.lazy(() => import('./pages/vendor/ProductForm'));
+const About = React.lazy(() => import('./pages/About'));
+const Journal = React.lazy(() => import('./pages/Journal'));
+const Contact = React.lazy(() => import('./pages/Contact'));
+const Experience3D = React.lazy(() => import('./pages/Experience3D'));
 
 // ─── Luxury Modern Theme ─────────────────────────────────────────────────────
 const theme = createTheme({
@@ -177,27 +177,33 @@ function App() {
           <div className="App" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
             <Navbar />
             <main style={{ flexGrow: 1 }}>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/journal" element={<Journal />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/experience-3d" element={<Experience3D />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/products/:id" element={<ProductDetail />} />
+              <Suspense fallback={
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+                  <CircularProgress sx={{ color: 'var(--lx-beige)' }} />
+                </Box>
+              }>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/journal" element={<Journal />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/experience-3d" element={<Experience3D />} />
+                  <Route path="/products" element={<Products />} />
+                  <Route path="/products/:id" element={<ProductDetail />} />
 
-                <Route path="/login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
-                <Route path="/register" element={<PublicOnlyRoute><Register /></PublicOnlyRoute>} />
+                  <Route path="/login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
+                  <Route path="/register" element={<PublicOnlyRoute><Register /></PublicOnlyRoute>} />
 
-                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
-                <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
-                <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-                <Route path="/vendor" element={<ProtectedRoute><VendorDashboard /></ProtectedRoute>} />
-                <Route path="/vendor/products/new" element={<ProtectedRoute><ProductForm /></ProtectedRoute>} />
-                <Route path="/vendor/products/edit/:id" element={<ProtectedRoute><ProductForm /></ProtectedRoute>} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
+                  <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                  <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+                  <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+                  <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+                  <Route path="/vendor" element={<ProtectedRoute><VendorDashboard /></ProtectedRoute>} />
+                  <Route path="/vendor/products/new" element={<ProtectedRoute><ProductForm /></ProtectedRoute>} />
+                  <Route path="/vendor/products/edit/:id" element={<ProtectedRoute><ProductForm /></ProtectedRoute>} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </Suspense>
             </main>
             <Footer />
             {/* Grounded AI Assistant */}
