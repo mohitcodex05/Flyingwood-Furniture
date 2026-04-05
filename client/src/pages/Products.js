@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   Container,
   Grid,
-  Card,
-  CardContent,
-  CardMedia,
   Typography,
   Button,
   Box,
@@ -19,9 +16,7 @@ import {
   IconButton,
   useTheme,
   useMediaQuery,
-  Rating,
-  Fab,
-  Badge
+  Fab
 } from '@mui/material';
 import {
   Search,

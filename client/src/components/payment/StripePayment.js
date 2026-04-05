@@ -47,11 +47,12 @@ const StripePayment = ({ order, onSuccess, onBack }) => {
     if (order && order._id) {
       initializePayment();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order]);
 
   const initializePayment = async () => {
     try {
-      const { clientSecret, totalAmount } = await createPaymentIntent(order._id);
+      const { clientSecret } = await createPaymentIntent(order._id);
       setClientSecret(clientSecret);
     } catch (err) {
       enqueueSnackbar('Failed to initialize payment', { variant: 'error' });
@@ -120,7 +121,7 @@ const StripePayment = ({ order, onSuccess, onBack }) => {
         </Typography>
         
         {error && (
-          <Alert severity="error" sx={{ mb: 2 }} onClose={clearError}>
+          <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
         )}

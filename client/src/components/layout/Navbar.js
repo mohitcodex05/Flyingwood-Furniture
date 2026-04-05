@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   Badge,
   Box,
-  Avatar,
   Divider,
   Menu,
   MenuItem,

@@ -19,7 +19,6 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  FormLabel,
   Divider,
   Alert,
   CircularProgress,
@@ -33,8 +32,7 @@ import {
   CreditCard, 
   LocalShipping, 
   Assignment, 
-  CheckCircle,
-  Place 
+  CheckCircle
 } from '@mui/icons-material';
 import { cartAPI, orderAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -150,7 +148,7 @@ const Checkout = () => {
         }))
       };
 
-      const response = await orderAPI.create(orderData);
+      await orderAPI.create(orderData);
       
       // Move to confirmation step
       setActiveStep(3);

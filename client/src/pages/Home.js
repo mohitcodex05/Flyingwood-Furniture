@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
 import { productAPI, cartAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { formatPrice } from '../utils/currency';
 import ProductCard from '../components/shared/ProductCard';
 
 // Unified ProductCard is used instead of local version

@@ -9,12 +9,14 @@ import {
   Button
 } from '@mui/material';
 import { ThumbUp } from '@mui/icons-material';
+import api from '../../services/api';
 
 const ReviewList = ({ productId }) => {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     fetchReviews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId]);
 
   const fetchReviews = async () => {

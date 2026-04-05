@@ -33,13 +33,10 @@ api.interceptors.response.use(
   }
 );
 
-// Products API
 export const productAPI = {
   getAll: async (params = {}) => {
     try {
-      console.log('🔄 API: Fetching products...');
       const response = await api.get('/products', { params });
-      console.log('📦 API Response:', response);
       
       // Return just the data array
       return response.data;

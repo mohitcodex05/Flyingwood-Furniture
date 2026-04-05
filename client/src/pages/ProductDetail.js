@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Container, Grid, Typography, Box, Card, CardMedia, Button, Chip, Rating,
-  Divider, Alert, CircularProgress, Tabs, Tab, IconButton, Breadcrumbs,
-  Stepper, Step, StepLabel, List, ListItem, ListItemIcon, ListItemText, Paper
+  Container, Grid, Typography, Box, CardMedia, Button,
+  CircularProgress, Tabs, Tab, IconButton, Breadcrumbs
 } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Favorite, FavoriteBorder, Share, LocalShipping, Spa, Security, Replay, Star, ChevronLeft, ChevronRight, Home, Store } from '@mui/icons-material';
+import { Favorite, FavoriteBorder, LocalShipping, Spa, Security, Replay, Star, ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { productAPI, cartAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { formatPrice } from '../utils/currency';
@@ -41,6 +40,7 @@ const ProductDetail = () => {
       }
     };
     fetchProduct();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const getFallbackProduct = () => ({

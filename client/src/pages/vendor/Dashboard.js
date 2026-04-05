@@ -107,6 +107,7 @@ const VendorDashboard = () => {
     } finally {
       setLoading(false);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderAPI, user?._id]);
 
   // useEffect with proper dependencies
