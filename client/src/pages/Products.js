@@ -21,14 +21,11 @@ import {
 import {
   Search,
   FilterList,
-  FavoriteBorder,
-  Favorite,
   ViewModule,
   ViewList,
 } from '@mui/icons-material';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { productAPI, cartAPI } from '../services/api';
-import { formatPrice } from '../utils/currency';
 import ProductCard from '../components/shared/ProductCard';
 
 const Products = () => {
