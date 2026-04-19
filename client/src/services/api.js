@@ -93,6 +93,11 @@ export const orderAPI = {
   updateStatus: (id, statusData) => api.put(`/orders/${id}/status`, statusData),
 };
 
+// Payment API
+export const paymentAPI = {
+  createOrder: (data) => api.post('/payment/create-order', data),
+};
+
 // User API - FOR ADMIN
 export const userAPI = {
   getAll: () => api.get('/users/all'),

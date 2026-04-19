@@ -34,9 +34,9 @@ import {
   Assignment, 
   CheckCircle
 } from '@mui/icons-material';
-import { cartAPI, orderAPI } from '../services/api';
+import { cartAPI, orderAPI, paymentAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { formatPrice } from '../utils/currency';
+import { formatPrice, EXPERIMENTAL_EXCHANGE_RATE } from '../utils/currency';
 
 const Checkout = () => {
   const { user } = useAuth();
@@ -46,7 +46,9 @@ const Checkout = () => {
   const [cart, setCart] = useState({ items: [] });
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
+  const [processingMessage, setProcessingMessage] = useState('');
   const [error, setError] = useState('');
+  const [showSuccessAnim, setShowSuccessAnim] = useState(false);
 
   // Form states
   const [shippingAddress, setShippingAddress] = useState({
@@ -131,10 +133,22 @@ const Checkout = () => {
     setActiveStep((prev) => prev - 1);
   };
 
-  const handlePlaceOrder = async () => {
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      if (document.getElementById('razorpay-script')) {
+        return resolve(true);
+      }
+      const script = document.createElement("script");
+      script.id = 'razorpay-script';
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const executeOrderPlacement = async () => {
     try {
-      setProcessing(true);
-      
       const orderData = {
         shippingAddress,
         shippingMethod,
@@ -149,18 +163,88 @@ const Checkout = () => {
       };
 
       await orderAPI.create(orderData);
-      
-      // Move to confirmation step
       setActiveStep(3);
-      
-      // Clear cart
       await cartAPI.clear();
-      
     } catch (err) {
       setError('Failed to place order. Please try again.');
       console.error('Error placing order:', err);
     } finally {
       setProcessing(false);
+      setProcessingMessage('');
+    }
+  };
+
+  const handlePlaceOrder = async () => {
+    setProcessing(true);
+    setError('');
+
+    if (paymentMethod === 'razorpay') {
+      setProcessingMessage('Processing Payment...');
+      
+      // Artificial delay for DEMO animation
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      const isScriptLoaded = await loadRazorpayScript();
+      if (!isScriptLoaded) {
+        setError('Failed to load Razorpay SDK. Check your internet connection.');
+        setProcessing(false);
+        setProcessingMessage('');
+        return;
+      }
+
+      try {
+        // Convert USD total → INR → Paise (smallest unit Razorpay accepts)
+        const amountInPaise = Math.round(calculateTotal() * EXPERIMENTAL_EXCHANGE_RATE * 100);
+        const { data } = await paymentAPI.createOrder({ amount: amountInPaise, currency: 'INR' });
+        const { order, keyId } = data;
+
+        const options = {
+          key: keyId,
+          amount: order.amount,
+          currency: order.currency,
+          name: "Flyingwood Furniture",
+          description: "Demo Order Payment",
+          order_id: order.id,
+          handler: async function (response) {
+             // Show 5-second success animation THEN place order
+             setShowSuccessAnim(true);
+             await new Promise((resolve) => setTimeout(resolve, 5000));
+             setShowSuccessAnim(false);
+             setProcessingMessage('Finalizing Order...');
+             await executeOrderPlacement();
+          },
+          prefill: {
+            name: `${shippingAddress.firstName} ${shippingAddress.lastName}`,
+            email: user?.email || '',
+          },
+          theme: {
+            color: "#1976d2"
+          }
+        };
+
+        const paymentObject = new window.Razorpay(options);
+        paymentObject.open();
+
+        paymentObject.on('payment.failed', function (response) {
+          setError("Payment Failed: " + response.error.description);
+          setProcessing(false);
+          setProcessingMessage('');
+        });
+
+        // Reset if user closes modal without paying
+        paymentObject.on('modal.closed', function() {
+           setProcessing(false);
+           setProcessingMessage('');
+        });
+
+      } catch (err) {
+        setError('Error initializing Razorpay checkout.');
+        console.error(err);
+        setProcessing(false);
+        setProcessingMessage('');
+      }
+    } else {
+      await executeOrderPlacement();
     }
   };
 
@@ -376,6 +460,11 @@ const Checkout = () => {
                     control={<Radio />} 
                     label="Apple Pay" 
                   />
+                  <FormControlLabel 
+                    value="razorpay" 
+                    control={<Radio />} 
+                    label={<b>Pay with Razorpay</b>} 
+                  />
                 </RadioGroup>
 
                 {paymentMethod === 'credit_card' && (
@@ -493,12 +582,76 @@ const Checkout = () => {
               </Box>
             )}
 
+            {/* Payment Success Animation Overlay */}
+            {showSuccessAnim && (
+              <Box sx={{
+                position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+                backgroundColor: 'rgba(0,0,0,0.75)', zIndex: 9999,
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                '@keyframes popIn': {
+                  '0%': { transform: 'scale(0)', opacity: 0 },
+                  '60%': { transform: 'scale(1.2)', opacity: 1 },
+                  '100%': { transform: 'scale(1)', opacity: 1 },
+                },
+                '@keyframes fadeSlide': {
+                  '0%': { opacity: 0, transform: 'translateY(20px)' },
+                  '100%': { opacity: 1, transform: 'translateY(0)' },
+                },
+                '@keyframes ring': {
+                  '0%': { transform: 'scale(1)', opacity: 0.8 },
+                  '100%': { transform: 'scale(2.5)', opacity: 0 },
+                },
+              }}>
+                {/* Ripple rings */}
+                <Box sx={{
+                  position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  width: 160, height: 160, mb: 3,
+                }}>
+                  {[0, 0.4, 0.8].map((delay, i) => (
+                    <Box key={i} sx={{
+                      position: 'absolute', width: 120, height: 120, borderRadius: '50%',
+                      border: '3px solid #4caf50', animation: 'ring 1.5s ease-out infinite',
+                      animationDelay: `${delay}s`,
+                    }} />
+                  ))}
+                  <CheckCircle sx={{
+                    fontSize: 100, color: '#4caf50',
+                    animation: 'popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+                    filter: 'drop-shadow(0 0 20px rgba(76,175,80,0.8))',
+                  }} />
+                </Box>
+
+                <Typography variant="h3" sx={{
+                  color: '#ffffff', fontWeight: 800, mb: 1,
+                  animation: 'fadeSlide 0.5s ease 0.3s both',
+                }}>
+                  Payment Successful! 🎉
+                </Typography>
+                <Typography variant="h6" sx={{
+                  color: 'rgba(255,255,255,0.8)',
+                  animation: 'fadeSlide 0.5s ease 0.5s both',
+                }}>
+                  Your order has been placed
+                </Typography>
+                <Typography variant="body2" sx={{
+                  color: 'rgba(255,255,255,0.5)', mt: 3,
+                  animation: 'fadeSlide 0.5s ease 0.7s both',
+                }}>
+                  Saving your order details...
+                </Typography>
+              </Box>
+            )}
+
             {/* Step 4: Confirmation */}
             {activeStep === 3 && (
               <Box textAlign="center" sx={{ py: 4 }}>
-                <CheckCircle sx={{ fontSize: 80, color: 'success.main', mb: 2 }} />
+                <CheckCircle sx={{
+                  fontSize: 80, color: 'success.main', mb: 2,
+                  '@keyframes pulse': { '0%': { transform: 'scale(1)' }, '50%': { transform: 'scale(1.15)' }, '100%': { transform: 'scale(1)' } },
+                  animation: 'pulse 1.2s ease-in-out infinite',
+                }} />
                 <Typography variant="h4" gutterBottom color="success.main">
-                  Order Confirmed!
+                  {paymentMethod === 'razorpay' ? 'Payment Successful 🎉' : 'Order Confirmed!'}
                 </Typography>
                 <Typography variant="h6" color="text.secondary" gutterBottom>
                   Thank you for your purchase
@@ -595,15 +748,22 @@ const Checkout = () => {
                   )}
                   
                   {activeStep === 2 && (
-                    <Button
-                      variant="contained"
-                      onClick={handlePlaceOrder}
-                      disabled={processing}
-                      fullWidth
-                      size="large"
-                    >
-                      {processing ? <CircularProgress size={24} /> : 'Place Order'}
-                    </Button>
+                    <Box sx={{ width: '100%' }}>
+                      <Button
+                        variant="contained"
+                        onClick={handlePlaceOrder}
+                        disabled={processing}
+                        fullWidth
+                        size="large"
+                      >
+                        {processing ? <CircularProgress size={24} /> : (paymentMethod === 'razorpay' ? 'Pay Now' : 'Place Order')}
+                      </Button>
+                      {processing && processingMessage && (
+                        <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 1 }}>
+                          {processingMessage}
+                        </Typography>
+                      )}
+                    </Box>
                   )}
                 </Box>
               </>
