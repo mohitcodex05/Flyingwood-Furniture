@@ -1,0 +1,14 @@
+{
+  "name": "flyingwood-furniture",
+  "version": "1.0.0",
+  "description": "Flyingwood Furniture - Full Stack E-Commerce",
+  "scripts": {
+    "start": "node backend/src/server.js",
+    "install:backend": "cd backend && npm install",
+    "install:client": "cd client && npm install",
+    "build": "cd backend && npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
