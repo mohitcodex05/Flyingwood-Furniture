@@ -12,17 +12,18 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5001',
-  // Add your Vercel frontend URL below once deployed
+  'https://flyingwood-furniture.vercel.app',
+  'https://flyingwood-furniture-rc3sl29fe-mohitcodex05s-projects.vercel.app',
   process.env.CLIENT_URL,
 ].filter(Boolean);
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, curl, Postman)
+    // Allow requests with no origin (mobile apps, curl, Postman, server-to-server)
     if (!origin) return callback(null, true);
     if (
       allowedOrigins.includes(origin) ||
-      /\.vercel\.app$/.test(origin) ||           // all *.vercel.app subdomains
+      /\.vercel\.app$/.test(origin) ||
       /flyingwood-furniture\.onrender\.com$/.test(origin)
     ) {
       return callback(null, true);
@@ -30,7 +31,13 @@ app.use(cors({
     callback(new Error('CORS policy: Origin not allowed → ' + origin));
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
+// Handle OPTIONS preflight for all routes
+app.options('*', cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
